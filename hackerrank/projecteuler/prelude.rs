@@ -13,4 +13,4 @@ macro_rules! make_reader {
     };
 }
 
-make_reader! {read_i32, i32}
+make_reader! {read_i64, i64}
