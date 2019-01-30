@@ -1,0 +1,8 @@
+[package]
+name = "problem2"
+version = "0.1.0"
+authors = ["Shanavas M <shanavas.m2@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+prelude = {path = "../prelude"}
