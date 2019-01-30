@@ -1,0 +1,11 @@
+[[package]]
+name = "prelude"
+version = "0.1.0"
+
+[[package]]
+name = "problem1"
+version = "0.1.0"
+dependencies = [
+ "prelude 0.1.0",
+]
+
