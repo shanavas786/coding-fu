@@ -21,3 +21,23 @@
 - for portability specify signed or unsigned if non character data is to be stored in char
 - Conversion takes place across assignments. RHS is converted to the type of LHS
 - Longer integers are converted to shorter ones or chars by dropping the higher order bits
+
+## section 2.9
+- right shifting signd values will fill vacated bits with sign bit (arithmatic shift) on some
+  machines and 0 (logical shift) on other
+
+- A statement is a complete line of code that performs some action (doesn't
+  evaluates to a value), while an expression is any section of the code that
+  evaluates to a value. Expressions can be combined “horizontally” into larger
+  expressions using operators, while statements can only be combined
+  “vertically” by writing one after another, or with block constructs. Every
+  expression can be used as a statement (whose effect is to evaluate the
+  expression and ignore the resulting value)
+
+## section 2.10
+- C doesn't specify the order in which operants of an operator are evaluated
+  (except for &&, ||, ?: and ,)
+  for eg: x = f() + g() either of f or g could be evaluated first
+  similarly, the order in which function arguments are evaluated is not specified
+  printf("%d, %d", ++n, ++n) could produce different outputs with different compilers.
+  a[i] = i++; - behaviour is compiler dependent
