@@ -2,6 +2,14 @@
 
 - Type of value determines the set of values it can have and what operations can be performed on it.
 
+## section 2.2
+ - size of int => usually a word
+ - shorts and ints are atleast 16 bits
+ - longs are atleast 32 bits
+ - short is no longer than int which is no longer than long
+ - size of floating point objects are implementation dependant.
+ - float, double, long double could 1, 2 or 3 distinct sizes
+
 ## section 2.3
 - String constants can be concatenated at compile time
   "hello" "world" => "hello world"
