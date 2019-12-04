@@ -21,7 +21,23 @@ def calculate_fuel(mass):
     return (int(mass) // 3) - 2
 
 
+def calculate_fuel_for_all(mass):
+    total = 0
+    while True:
+        mass = calculate_fuel(mass)
+        if mass <= 0:
+            break
+        total += mass
+    return total
+
+
 if __name__ == "__main__":
     with open("../inputs/day01.txt") as ip:
-        total = sum(map(calculate_fuel, ip))
-    print(total)
+        # part one
+        fuel = sum(map(calculate_fuel, ip))
+        print("fuel required", fuel)
+
+    with open("../inputs/day01.txt") as ip:
+        # part one
+        fuel = sum(map(calculate_fuel_for_all, ip))
+        print("total fuel required", fuel)

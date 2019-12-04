@@ -21,9 +21,24 @@
 use prelude::nums_from_file;
 
 fn fuel_required(mass: u64) -> u64 {
-    mass.div_euclid(3) - 2
+    let div = mass.div_euclid(3);
+    if div > 2 {
+        div - 2
+    } else {
+        0
+    }
 }
 
+fn fuel_required_for_all(mass: u64) -> u64 {
+    let mut total = 0;
+    let mut mass = mass;
+
+    while mass > 0 {
+        mass = fuel_required(mass);
+        total += mass
+    }
+    total
+}
 
 #[test]
 fn test_fuel_required() {
@@ -33,8 +48,16 @@ fn test_fuel_required() {
     assert!(fuel_required(100756) == 33583);
 }
 
+#[test]
+fn test_fuel_required_for_all() {
+    assert!(fuel_required_for_all(1969) == 966);
+    assert!(fuel_required_for_all(100756) == 50346);
+}
+
 fn main() {
     let path = "../../inputs/day01.txt";
     let answer: u64 = nums_from_file(path).map(fuel_required).sum();
     println!("Total fuel required is: {}", answer);
+    let answer: u64 = nums_from_file(path).map(fuel_required_for_all).sum();
+    println!("Total fuel required considering fuel mass is: {}", answer);
 }
