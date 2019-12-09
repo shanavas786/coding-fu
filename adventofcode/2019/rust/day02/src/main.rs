@@ -61,6 +61,12 @@ fn patch_1202(mut code: Vec<u64>) -> Vec<u64> {
     code
 }
 
+fn patch(mut code: Vec<u64>, noun: u64, verb: u64) -> Vec<u64> {
+    code[1] = noun;
+    code[2] = verb;
+    code
+}
+
 fn main() {
     let filename = "../../inputs/day02.txt";
     let contents = fs::read_to_string(filename)
@@ -69,8 +75,20 @@ fn main() {
     let iter = nums_from_csv_str(&contents);
     let code: Vec<u64> = iter.collect();
 
-    let machine = Intcode::new(patch_1202(code));
+    let machine = Intcode::new(patch_1202(code.to_owned()));
     let result = machine.run();
 
-    println!("value at position zero {}", result[0])
+    println!("part 1: value at position zero {}", result[0]);
+
+    for noun in 1..=99 {
+        for verb in 1..=99 {
+            let machine = Intcode::new(patch(code.to_owned(), noun, verb));
+            let result = machine.run();
+
+            if result[0] == 19690720 {
+                println!("part 2: 100 * noun + verb is {}", 100 * noun + verb);
+                return;
+            }
+        }
+    }
 }

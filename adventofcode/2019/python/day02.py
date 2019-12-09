@@ -37,9 +37,9 @@ class Intcode:
         return self.code
 
 
-def patch_1202(code: list) -> list:
-    code[1] = 12
-    code[2] = 2
+def patch_1202(code: list, noun=12, verb=2) -> list:
+    code[1] = noun
+    code[2] = verb
     return code
 
 
@@ -47,6 +47,20 @@ if __name__ == "__main__":
     code = []
     with open("../inputs/day02.txt") as ip:
         code = list(map(int, ip.read().split(",")))
-        machine = Intcode(patch_1202(code))
+        machine = Intcode(patch_1202(code[:]))
         result = machine.run()
-        print(result)
+        print("part 1", result)
+
+        found = True
+        for noun in range(99):
+            for verb in range(99):
+                machine = Intcode(patch_1202(code[:], noun, verb))
+                result = machine.run()
+                if result[0] == 19690720:
+                    break
+            else:
+                continue
+
+            break
+
+        print("part 2", 100 * noun + verb)
