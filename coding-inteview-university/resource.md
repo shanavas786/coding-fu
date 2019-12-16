@@ -48,3 +48,12 @@
 # Algo
 ## Complexity
     - https://hackernoon.com/you-need-to-understand-big-o-notation-now-4ada3d2ec93a
+
+
+
+### Misc
+    - redis vs memcached
+    - rest vs soap
+    - mysql vs postgres
+    - proxy vs reverse proxy
+    - dogpile effect
