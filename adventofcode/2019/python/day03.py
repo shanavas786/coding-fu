@@ -2,11 +2,12 @@
 
 
 def get_vertices(wire):
-    x = y = 0
-    vertices = [(x, y)]
+    x = y = steps = 0
+    vertices = [(x, y, 0)]
 
     for edge in wire:
         length = int(edge[1:])
+        steps += length
 
         if edge[0] == "R":
             x += length
@@ -20,7 +21,7 @@ def get_vertices(wire):
         if edge[0] == "D":
             y -= length
 
-        vertices.append((x, y))
+        vertices.append((x, y, steps))
 
     return vertices
 
@@ -38,7 +39,7 @@ def get_intersections(edges1, edges2):
 
     # remove 0,0 if any
     try:
-        intersections.remove((0, 0))
+        intersections.remove((0, 0, 0))
     except Exception:
         pass
 
@@ -50,28 +51,35 @@ def get_distance(vert):
 
 
 def get_intersection(e1from, e1to, e2from, e2to):
-    e1x1, e1y1 = e1from
-    e1x2, e1y2 = e1to
-    e2x1, e2y1 = e2from
-    e2x2, e2y2 = e2to
+    e1x1, e1y1, steps_e1 = e1from
+    e1x2, e1y2, _ = e1to
+    e2x1, e2y1, steps_e2 = e2from
+    e2x2, e2y2, _ = e2to
 
     if e1y1 == e1y2 and e2x1 == e2x2:
         # e1 is horizontal and e2 is vertical
         if (e2y1 <= e1y1 <= e2y2 or e2y1 >= e1y1 >= e2y2) and (
             e1x1 <= e2x1 <= e1x2 or e1x1 >= e2x1 >= e1x2
         ):
-            return (e2x1, e1y1)
+            steps = steps_e1 + steps_e2 + abs(e2x1 - e1x1) + abs(e1y1 - e2y1)
+            return (e2x1, e1y1, steps)
     elif e2y1 == e2y2 and e1x1 == e1x2:
         # e1 is vertical and e2 is horizontal
         if (e1y1 <= e2y1 <= e1y2 or e1y1 >= e2y1 >= e1y2) and (
             e2x1 <= e1x1 <= e2x2 or e2x1 >= e1x1 >= e2x2
         ):
-            return (e1x1, e2y1)
+            steps = steps_e1 + steps_e2 + abs(e1x1 - e2x1) + abs(e2y1 - e1y1)
+            return (e1x1, e2y1, steps)
 
 
 def get_closest_intersection(edges1, edges2):
     ints = get_intersections(edges1, edges2)
     return min(map(lambda vert: get_distance(vert), ints))
+
+
+def get_min_path_intersection(edges1, edges2):
+    ints = get_intersections(edges1, edges2)
+    return min(map(lambda vert: vert[2], ints))
 
 
 def test1():
@@ -81,6 +89,7 @@ def test1():
     edges1 = get_vertices(wire1)
     edges2 = get_vertices(wire2)
     assert get_closest_intersection(edges1, edges2) == 6
+    assert get_min_path_intersection(edges1, edges2) == 30
 
 
 def test2():
@@ -90,6 +99,7 @@ def test2():
     edges1 = get_vertices(wire1)
     edges2 = get_vertices(wire2)
     assert get_closest_intersection(edges1, edges2) == 159
+    assert get_min_path_intersection(edges1, edges2) == 610
 
 
 if __name__ == "__main__":
@@ -100,4 +110,7 @@ if __name__ == "__main__":
 
         wire2 = lines[1].strip().split(",")
         edges2 = get_vertices(wire2)
-        print(get_closest_intersection(edges1, edges2))
+        print(
+            "Distanct to closest intersection", get_closest_intersection(edges1, edges2)
+        )
+        print("Min Steps to intersection", get_min_path_intersection(edges1, edges2))
