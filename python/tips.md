@@ -63,3 +63,15 @@
   >>> c = d = []
   >>> c is d
   True
+
+- Exception chaining can be explicitly suppressed by specifying None in the from clause:
+```python
+  try:
+     print(1 / 0)
+  except:
+     raise RuntimeError("Something bad happened") from None
+```
+- the Boolean operations or and and always return one of their operands.
+- and and or are shortcircuit operators
+- a == not b is syntax error
+- <<, >> Negative shift counts are illegal and cause a ValueError to be raised.
