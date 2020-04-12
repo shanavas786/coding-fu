@@ -19,6 +19,8 @@
 ## CSRF
     - https://www.youtube.com/watch?v=m0EHlfTgGUU
     - https://www.youtube.com/watch?v=fbfbwmYvhw8
+## HTTPS
+    - https://www.youtube.com/watch?v=T4Df5_cojAs
 
 ## Nginx
 ### Reverse Proxy
