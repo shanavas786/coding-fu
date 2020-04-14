@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from token_types import TokenType, Token
-from error_logger import ErrorLogger
+from .token_types import TokenType, Token
+from .error_logger import ErrorLogger
 
 KEYWORDS = {
     kw.value: kw

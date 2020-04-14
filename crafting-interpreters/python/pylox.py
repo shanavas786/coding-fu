@@ -2,7 +2,7 @@
 
 import sys
 
-from lox.scanner import Scanner
+from .scanner import Scanner
 
 
 class Lox:
