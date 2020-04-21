@@ -1,6 +1,8 @@
 import sys
 
 from .scanner import Scanner
+from .parser import Parser
+from .ast_printer import AstPrinter
 
 
 class Lox:
@@ -8,8 +10,10 @@ class Lox:
 
     def run(self, src: str):
         scanner = Scanner(src)
-        for token in scanner.scan_tokens():
-            print(token)
+        parser = Parser(scanner.scan_tokens())
+        ast = parser.parse()
+        printer = AstPrinter()
+        print(printer.print(ast))
 
     def run_file(self, filename: str):
         with open(filename, "r") as f:

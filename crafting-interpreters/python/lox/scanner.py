@@ -73,12 +73,12 @@ class Scanner:
 
     def peek(self):
         if self.is_end():
-            return '\0'
+            return "\0"
         return self.source[self.current]
 
     def peek2(self):
-        if self.current + 1>= len(self.source):
-            return '\0'
+        if self.current + 1 >= len(self.source):
+            return "\0"
         return self.source[self.current + 1]
 
     def get_char(self):
@@ -154,7 +154,7 @@ class Scanner:
         while self.peek().isalnum():
             self.get_char()
 
-        ident = self.source[self.start:self.current]
+        ident = self.source[self.start : self.current]
         token_type = KEYWORDS.get(ident, TokenType.IDENTIFIER)
         self.add_token(token_type)
 
@@ -170,5 +170,5 @@ class Scanner:
             while self.peek().isdecimal():
                 self.get_char()
 
-        num = self.source[self.start:self.current]
+        num = self.source[self.start : self.current]
         self.add_token(TokenType.NUMBER, float(num) if dotted else int(num))
