@@ -72,9 +72,13 @@ class Scanner:
         return self.tokens
 
     def peek(self):
+        if self.is_end():
+            return '\0'
         return self.source[self.current]
 
     def peek2(self):
+        if self.current + 1>= len(self.source):
+            return '\0'
         return self.source[self.current + 1]
 
     def get_char(self):

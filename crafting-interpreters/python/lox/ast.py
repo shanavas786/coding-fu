@@ -65,9 +65,9 @@ Ast.build_ast_classes(expr)
 
 
 
-# from lox.token_types import Token, TokenType
-# from lox.ast import Ast
-# from lox.ast_printer import AstPrinter
+# from plox.token_types import Token, TokenType
+# from plox.ast import Ast
+# from plox.ast_printer import AstPrinter
 # m = Ast.Binary(Ast.Unary(Token(TokenType.MINUS, "-", None, 1), Ast.Literal(123)), Token(TokenType.STAR, "*", None, 1), Ast.Grouping(Ast.Literal(45.67)))
 # v=AstPrinter()
 # v.print(m)
