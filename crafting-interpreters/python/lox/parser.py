@@ -150,7 +150,7 @@ class Parser:
         if self.match(TokenType.LEFT_PAREN):
             expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Exprected ')' after expression")
-            return expr
+            return Ast.Grouping(expr)
 
         self.error(self.peek(), "Expcted expression")
 
