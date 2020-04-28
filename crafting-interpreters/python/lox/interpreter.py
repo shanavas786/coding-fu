@@ -15,15 +15,24 @@ OPERATOR_MAP = {
 
 
 class Interpreter:
-    def interpret(self, expr):
+    def interpret(self, statements):
         try:
-            value = self.evaluate(expr)
-            print(str(value))
+            for stmt in statements:
+                self.execute(stmt)
         except RuntimeException as ex:
             ErrorLogger.runtime_error(ex)
 
     def evaluate(self, expr):
+        """
+        Evaluate an expression
+        """
         return expr.accept(self)
+
+    def execute(self, stmt):
+        """
+        Execute a statement
+        """
+        stmt.accept(self)
 
     def isTruthy(self, expr):
         """
@@ -74,3 +83,10 @@ class Interpreter:
         op_name = OPERATOR_MAP[tk_type]
         fn = getattr(left, op_name)
         return fn(right)
+
+    def visitExpressionStmt(self, stmt):
+        self.evaluate(stmt.exp)
+
+    def visitPrintStmt(self, stmt):
+        val = self.evaluate(stmt.exp)
+        print(val)

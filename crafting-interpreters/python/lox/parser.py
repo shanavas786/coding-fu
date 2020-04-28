@@ -50,10 +50,32 @@ class Parser:
         raise ParseError()
 
     def parse(self) -> Ast.Expr:
-        try:
-            return self.expression()
-        except ParseError:
-            pass
+        """
+        program -> statement* EOF
+        """
+        statements = []
+        while not self.is_end():
+            statements.append(self.statement())
+        return statements
+
+    def statement(self):
+        """
+        statement -> expr_statement | print_statement
+        """
+
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        return self.expr_statement()
+
+    def print_statement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMI_COLON, "expected semicolon")
+        return Ast.Print(expr)
+
+    def expression_statement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMI_COLON, "expected semicolon")
+        return Ast.Expression(expr)
 
     def expression(self) -> Ast.Expr:
         """
