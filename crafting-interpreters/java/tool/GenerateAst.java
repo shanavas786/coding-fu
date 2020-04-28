@@ -17,6 +17,9 @@ public class GenerateAst {
                             "Grouping : Expr expression",
                             "Literal  : Object value",
                             "Unary    : Token operator, Expr right"));
+    defineAst(outputDir, "Stmt",
+              Arrays.asList("Expression : Expr expression",
+                            "Print      : Expr expression"));
   }
 
   private static void defineAst(String outputDir, String baseName,
@@ -77,8 +80,8 @@ public class GenerateAst {
     writer.println();
     writer.println("    @Override");
     writer.println("    <R> R accept(Visitor<R> visitor) {");
-    writer.println("      return visitor.visit" +
-        className + baseName + "(this);");
+    writer.println("      return visitor.visit" + className + baseName +
+                   "(this);");
     writer.println("    }");
 
     // Fields.
