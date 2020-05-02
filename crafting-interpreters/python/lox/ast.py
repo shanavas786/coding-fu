@@ -7,10 +7,12 @@ expr = {
         "Grouping": [("Expr", "exp")],
         "Literal": [("object", "value")],
         "Unary": [("Token", "op"), ("Expr", "exp")],
+        "Variable": [("Token", "name")],
     },
     "Stmt": {
         "Expression": [("Expr", "exp")],
-        "Print": [("Expr", "exp")]
+        "Print": [("Expr", "exp")],
+        "Var": [("Token", "name"), ("Expr", "value")],
     }
 }
 

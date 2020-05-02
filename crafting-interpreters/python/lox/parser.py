@@ -51,12 +51,36 @@ class Parser:
 
     def parse(self) -> Ast.Expr:
         """
-        program -> statement* EOF
+        program -> declaration* EOF
         """
         statements = []
         while not self.is_end():
-            statements.append(self.statement())
+            statements.append(self.declaration())
         return statements
+
+    def declaration(self):
+        """
+        declaration -> varDecl | statement
+        """
+        try:
+            if self.match(TokenType.VAR):
+                return self.variable_declaration()
+            return self.statement()
+        except ParseError:
+            self.synchronize()
+
+    def variable_declaration(self):
+        """
+        varDecl -> "var" IDENTIFIER ( "=" expression )? ;
+        """
+        name = self.consume(TokenType.IDENTIFIER, "expected identifier")
+
+        val = None
+        if self.match(TokenType.EQUAL):
+            val = self.expression()
+
+        self.consume(TokenType.SEMI_COLON, "expected ;")
+        return Ast.Var(name, val)
 
     def statement(self):
         """
@@ -155,7 +179,7 @@ class Parser:
     def primary(self) -> Ast.Expr:
         """
         primary -> NUMBER | STRING | "false" | "true" | "nil"
-                   | "(" expression ")"
+                   | "(" expression ")" | IDENTIFIER
         """
         if self.match(TokenType.FALSE):
             return Ast.Literal(False)
@@ -168,6 +192,9 @@ class Parser:
 
         if self.match(TokenType.STRING, TokenType.NUMBER):
             return Ast.Literal(self.previous().literal)
+
+        if self.match(TokenType.IDENTIFIER):
+            return Ast.Variable(self.previous())
 
         if self.match(TokenType.LEFT_PAREN):
             expr = self.expression()

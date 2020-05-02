@@ -1,3 +1,4 @@
+from .environment import Environment
 from .token_types import TokenType
 from .error_logger import RuntimeException, ErrorLogger
 
@@ -15,6 +16,9 @@ OPERATOR_MAP = {
 
 
 class Interpreter:
+    def __init__(self):
+        self.env = Environment()
+
     def interpret(self, statements):
         try:
             for stmt in statements:
@@ -90,3 +94,12 @@ class Interpreter:
     def visitPrintStmt(self, stmt):
         val = self.evaluate(stmt.exp)
         print(val)
+
+    def visitVarStmt(self, stmt):
+        val = self.evaluate(stmt.value)
+        name = stmt.name.lexeme
+        self.env.define(name, val)
+
+    def visitVariableExpr(self, stmt):
+        name = stmt.name
+        return self.env.get(name)
