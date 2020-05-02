@@ -38,6 +38,15 @@ class Interpreter:
         """
         stmt.accept(self)
 
+    def execute_block(self, statements, env):
+        prev_env = self.env
+        self.env = env
+        try:
+            for stmt in statements:
+                self.execute(stmt)
+        finally:
+            self.env = prev_env
+
     def isTruthy(self, expr):
         """
         In Lox, None is Falsy
@@ -109,3 +118,6 @@ class Interpreter:
         val = self.evaluate(expr.value)
         self.env.assign(name, val)
         return val
+
+    def visitBlockStmt(self, stmt):
+        self.execute_block(stmt.statements, Environment(self.env))

@@ -11,6 +11,7 @@ expr = {
         "Variable": [("Token", "name")],
     },
     "Stmt": {
+        "Block": [("list", "statements")],
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
         "Var": [("Token", "name"), ("Expr", "value")],
@@ -20,7 +21,7 @@ expr = {
 
 class AstBuilder:
     def __init__(self):
-        self.classes = {"Token": Token, "object": object}  # hack
+        self.classes = {"Token": Token, "object": object, "list": list}  # hack
 
     def __getattr__(self, name):
         return self.classes[name]

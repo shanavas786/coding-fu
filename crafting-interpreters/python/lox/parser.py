@@ -84,11 +84,15 @@ class Parser:
 
     def statement(self):
         """
-        statement -> expr_statement | print_statement
+        statement -> expr_statement | print_statement | block
         """
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
+
+        if self.match(TokenType.LEFT_BRACE):
+            return self.block()
+
         return self.expression_statement()
 
     def print_statement(self):
@@ -100,6 +104,20 @@ class Parser:
         expr = self.expression()
         self.consume(TokenType.SEMI_COLON, "expected semicolon")
         return Ast.Expression(expr)
+
+    def block(self) -> Ast.Block:
+        """
+        block = "{" (declaration)* "}"
+        """
+
+        declarations = []
+        while not (self.check(TokenType.RIGHT_BRACE) or self.is_end()):
+            declaration = self.declaration()
+            declarations.append(declaration)
+
+        self.consume(TokenType.RIGHT_BRACE, "expected }.")
+
+        return Ast.Block(declarations)
 
     def expression(self) -> Ast.Expr:
         """
