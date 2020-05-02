@@ -75,7 +75,7 @@ class Parser:
         """
         name = self.consume(TokenType.IDENTIFIER, "expected identifier")
 
-        val = None
+        val = Ast.Literal(None)
         if self.match(TokenType.EQUAL):
             val = self.expression()
 
@@ -89,7 +89,7 @@ class Parser:
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
-        return self.expr_statement()
+        return self.expression_statement()
 
     def print_statement(self):
         expr = self.expression()
@@ -103,9 +103,25 @@ class Parser:
 
     def expression(self) -> Ast.Expr:
         """
-        expression -> equality
+        expression -> assignment
         """
-        return self.equality()
+        return self.assignment()
+
+    def assignment(self) -> Ast.Assign:
+        """
+        assignment -> IDENTIFIER "=" assignment | equality
+        """
+        expr = self.equality()
+
+        if self.match(TokenType.EQUAL):
+            token = self.previous()
+            value = self.assignment()
+
+            if isinstance(expr, Ast.Variable):
+                return Ast.Assign(expr.name, value)
+
+            self.error(token, "Invalid assignement target")
+        return expr
 
     def equality(self) -> Ast.Expr:
         """

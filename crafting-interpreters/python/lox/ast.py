@@ -3,6 +3,7 @@ from .token_types import Token
 
 expr = {
     "Expr": {
+        "Assign": [("Token", "name"), ("Expr", "value")],
         "Binary": [("Expr", "left"), ("Token", "op"), ("Expr", "right")],
         "Grouping": [("Expr", "exp")],
         "Literal": [("object", "value")],

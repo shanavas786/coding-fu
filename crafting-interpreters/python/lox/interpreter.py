@@ -100,6 +100,12 @@ class Interpreter:
         name = stmt.name.lexeme
         self.env.define(name, val)
 
-    def visitVariableExpr(self, stmt):
-        name = stmt.name
+    def visitVariableExpr(self, expr):
+        name = expr.name
         return self.env.get(name)
+
+    def visitAssignExpr(self, expr):
+        name = expr.name
+        val = self.evaluate(expr.value)
+        self.env.assign(name, val)
+        return val
