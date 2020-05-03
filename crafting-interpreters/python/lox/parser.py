@@ -86,6 +86,7 @@ class Parser:
         """
         statement -> if_statement
                      | while_statement
+                     | for_statement
                      | expr_statement
                      | print_statement
                      | block
@@ -95,6 +96,9 @@ class Parser:
 
         if self.match(TokenType.WHILE):
             return self.while_statement()
+
+        if self.match(TokenType.FOR):
+            return self.for_statement()
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
@@ -114,6 +118,45 @@ class Parser:
         body = self.statement()
 
         return Ast.While(cond, body)
+
+    def for_statement(self):
+        """
+        for_statement => "for" "(" (varDecl | expression_statement | ";")
+                                   (expression)? ;
+                                   (expression)?")" statement
+        """
+        self.consume(TokenType.LEFT_PAREN, "Expected (")
+
+        if self.match(TokenType.SEMI_COLON):
+            init = None
+        if self.match(TokenType.VAR):
+            init = self.variable_declaration()
+        else:
+            init = self.expression_statement()
+
+        cond = Ast.Literal(True)
+        if not self.check(TokenType.SEMI_COLON):
+            cond = self.expression()
+
+        self.consume(TokenType.SEMI_COLON, "expected ;")
+
+        increment = None
+        if not self.check(TokenType.RIGHT_PAREN):
+            increment = self.expression()
+
+        self.consume(TokenType.RIGHT_PAREN, "expected )")
+
+        body = self.statement()
+
+        if increment is not None:
+            body = Ast.Block([body, Ast.Expression(increment)])
+
+        body = Ast.While(cond, body)
+
+        if init is not None:
+            body = Ast.Block([init, body])
+
+        return body
 
     def if_statement(self):
         """
