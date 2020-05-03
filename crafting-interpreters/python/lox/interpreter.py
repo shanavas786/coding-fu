@@ -105,7 +105,9 @@ class Interpreter:
         print(val)
 
     def visitVarStmt(self, stmt):
-        val = self.evaluate(stmt.value)
+        val = None
+        if stmt.value is not None:
+            val = self.evaluate(stmt.value)
         name = stmt.name.lexeme
         self.env.define(name, val)
 
@@ -121,3 +123,9 @@ class Interpreter:
 
     def visitBlockStmt(self, stmt):
         self.execute_block(stmt.statements, Environment(self.env))
+
+    def visitIfStmt(self, stmt):
+        if self.evaluate(stmt.cond):
+            self.execute(stmt.then_branch)
+        elif stmt.else_branch is not None:
+            self.execute(stmt.else_branch)

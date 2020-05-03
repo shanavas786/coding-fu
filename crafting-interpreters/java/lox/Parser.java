@@ -45,7 +45,11 @@ class Parser {
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Stmt.Var(name, initializer);
   }
+
   private Stmt statement() {
+    if (match(IF))
+      return ifStatement();
+
     if (match(PRINT))
       return printStatement();
 
@@ -53,6 +57,19 @@ class Parser {
       return new Stmt.Block(block());
 
     return expressionStatement();
+  }
+
+  private Stmt ifStatement() {
+    consume(LEFT_PAREN, "Exprected (");
+    Expr cond = this.expression();
+    consume(RIGHT_PAREN, "Exprected )");
+
+    Stmt ifBranch = this.statement();
+    Stmt elseBranch = null;
+    if (match(ELSE))
+      elseBranch = this.statement();
+
+    return new Stmt.If(cond, ifBranch, elseBranch);
   }
 
   private List<Stmt> block() {

@@ -11,6 +11,7 @@ expr = {
         "Variable": [("Token", "name")],
     },
     "Stmt": {
+        "If": [("Expr", "cond"), ("Stmt", "then_branch"), ("Stmt", "else_branch")],
         "Block": [("list", "statements")],
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
@@ -34,7 +35,8 @@ class AstBuilder:
             for info, value in zip(fields, args):
                 klass_name, name = info
                 klass = getattr(self, klass_name)
-                assert isinstance(value, klass)
+                if value is not None:
+                    assert isinstance(value, klass)
                 setattr(me, name, value)
 
         return init

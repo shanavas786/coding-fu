@@ -42,7 +42,9 @@ abstract class Expr {
     final Expr right;
   }
   static class Grouping extends Expr {
-    Grouping(Expr expression) { this.expression = expression; }
+    Grouping(Expr expression) {
+      this.expression = expression;
+    }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
@@ -52,7 +54,9 @@ abstract class Expr {
     final Expr expression;
   }
   static class Literal extends Expr {
-    Literal(Object value) { this.value = value; }
+    Literal(Object value) {
+      this.value = value;
+    }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
@@ -76,7 +80,9 @@ abstract class Expr {
     final Expr right;
   }
   static class Variable extends Expr {
-    Variable(Token name) { this.name = name; }
+    Variable(Token name) {
+      this.name = name;
+    }
 
     @Override
     <R> R accept(Visitor<R> visitor) {

@@ -75,7 +75,7 @@ class Parser:
         """
         name = self.consume(TokenType.IDENTIFIER, "expected identifier")
 
-        val = Ast.Literal(None)
+        val = None
         if self.match(TokenType.EQUAL):
             val = self.expression()
 
@@ -84,8 +84,10 @@ class Parser:
 
     def statement(self):
         """
-        statement -> expr_statement | print_statement | block
+        statement -> if_statement | expr_statement | print_statement | block
         """
+        if self.match(TokenType.IF):
+            return self.if_statement()
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
@@ -94,6 +96,21 @@ class Parser:
             return self.block()
 
         return self.expression_statement()
+
+    def if_statement(self):
+        """
+        if_statement => "if" "(" expression ")" statement ("else" statement)?
+        """
+        self.consume(TokenType.LEFT_PAREN, "Expected (")
+        cond = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected )")
+        then_branch = self.statement()
+
+        else_branch = None
+        if self.match(TokenType.ELSE):
+            else_branch = self.statement()
+
+        return Ast.If(cond, then_branch, else_branch)
 
     def print_statement(self):
         expr = self.expression()
