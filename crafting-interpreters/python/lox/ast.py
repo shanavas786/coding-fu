@@ -17,6 +17,7 @@ expr = {
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
         "Var": [("Token", "name"), ("Expr", "value")],
+        "While": [("Expr", "cond"), ("Stmt", "body")],
     },
 }
 

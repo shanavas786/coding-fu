@@ -84,10 +84,17 @@ class Parser:
 
     def statement(self):
         """
-        statement -> if_statement | expr_statement | print_statement | block
+        statement -> if_statement
+                     | while_statement
+                     | expr_statement
+                     | print_statement
+                     | block
         """
         if self.match(TokenType.IF):
             return self.if_statement()
+
+        if self.match(TokenType.WHILE):
+            return self.while_statement()
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
@@ -96,6 +103,17 @@ class Parser:
             return self.block()
 
         return self.expression_statement()
+
+    def while_statement(self):
+        """
+        while_statement => "while" "(" expression ")" statement
+        """
+        self.consume(TokenType.LEFT_PAREN, "Expected (")
+        cond = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected )")
+        body = self.statement()
+
+        return Ast.While(cond, body)
 
     def if_statement(self):
         """

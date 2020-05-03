@@ -50,6 +50,9 @@ class Parser {
     if (match(IF))
       return ifStatement();
 
+    if (match(WHILE))
+      return whileStatement();
+
     if (match(PRINT))
       return printStatement();
 
@@ -70,6 +73,16 @@ class Parser {
       elseBranch = this.statement();
 
     return new Stmt.If(cond, ifBranch, elseBranch);
+  }
+
+  private Stmt whileStatement() {
+    consume(LEFT_PAREN, "Exprected (");
+    Expr cond = this.expression();
+    consume(RIGHT_PAREN, "Exprected )");
+
+    Stmt body = this.statement();
+
+    return new Stmt.While(cond, body);
   }
 
   private List<Stmt> block() {

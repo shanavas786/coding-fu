@@ -144,3 +144,7 @@ class Interpreter:
             self.execute(stmt.then_branch)
         elif stmt.else_branch is not None:
             self.execute(stmt.else_branch)
+
+    def visitWhileStmt(self, stmt):
+        while self.isTruthy(self.evaluate(stmt.cond)):
+            self.execute(stmt.body)
