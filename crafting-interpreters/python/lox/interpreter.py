@@ -121,11 +121,26 @@ class Interpreter:
         self.env.assign(name, val)
         return val
 
+    def visitLogicalExpr(self, expr):
+        left = self.evaluate(expr.left)
+
+        if expr.op.token_type == TokenType.OR:
+            if self.isTruthy(left):
+                return left
+            else:
+                return self.evaluate(expr.right)
+
+        if expr.op.token_type == TokenType.AND:
+            if self.isTruthy(left):
+                return self.evaluate(expr.right)
+            else:
+                return left
+
     def visitBlockStmt(self, stmt):
         self.execute_block(stmt.statements, Environment(self.env))
 
     def visitIfStmt(self, stmt):
-        if self.evaluate(stmt.cond):
+        if self.isTruthy(self.evaluate(stmt.cond)):
             self.execute(stmt.then_branch)
         elif stmt.else_branch is not None:
             self.execute(stmt.else_branch)

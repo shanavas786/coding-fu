@@ -1,0 +1,15 @@
+var a = 3;
+var b = 1;
+var c = 2;
+
+if (a > b) {
+  if (a > c) {
+    print a;
+  } else {
+    print c;
+  }
+} else if (b > c) {
+  print b;
+} else {
+  print c;
+}

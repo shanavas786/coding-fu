@@ -144,9 +144,10 @@ class Parser:
 
     def assignment(self) -> Ast.Assign:
         """
-        assignment -> IDENTIFIER "=" assignment | equality
+        assignment -> IDENTIFIER "=" assignment
+                     | logic_or
         """
-        expr = self.equality()
+        expr = self.logic_or()
 
         if self.match(TokenType.EQUAL):
             token = self.previous()
@@ -157,6 +158,33 @@ class Parser:
 
             self.error(token, "Invalid assignement target")
         return expr
+
+    def logic_or(self):
+        """
+        logic_or -> logic_and ("or" logic_and)*
+        """
+        left = self.logic_and()
+
+        right = None
+        while self.match(TokenType.OR):
+            op = self.previous()
+            right = self.logic_and()
+            left = Ast.Logical(left, op, right)
+
+        return left
+
+    def logic_and(self):
+        """
+        logic_and -> equality ("or" equality)*
+        """
+        left = self.equality()
+
+        while self.match(TokenType.AND):
+            op = self.previous()
+            right = self.equality()
+            left = Ast.Logical(left, op, right)
+
+        return left
 
     def equality(self) -> Ast.Expr:
         """

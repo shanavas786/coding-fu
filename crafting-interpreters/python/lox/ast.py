@@ -5,6 +5,7 @@ expr = {
     "Expr": {
         "Assign": [("Token", "name"), ("Expr", "value")],
         "Binary": [("Expr", "left"), ("Token", "op"), ("Expr", "right")],
+        "Logical": [("Expr", "left"), ("Token", "op"), ("Expr", "right")],
         "Grouping": [("Expr", "exp")],
         "Literal": [("object", "value")],
         "Unary": [("Token", "op"), ("Expr", "exp")],
@@ -16,7 +17,7 @@ expr = {
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
         "Var": [("Token", "name"), ("Expr", "value")],
-    }
+    },
 }
 
 
@@ -58,7 +59,7 @@ class AstBuilder:
             }
 
         if base:
-            bases = (getattr(self, base), )
+            bases = (getattr(self, base),)
 
         klass = type(name, bases, attrs)
         self.register_class(name, klass)
@@ -72,7 +73,6 @@ class AstBuilder:
 
 Ast = AstBuilder()
 Ast.build_ast_classes(expr)
-
 
 
 # from plox.token_types import Token, TokenType
