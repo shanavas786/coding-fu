@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from abc import ABC, abstractmethod
+
 from .environment import Environment
+from .error_logger import Return
 
 
 class LoxCallable(ABC):
@@ -25,7 +27,10 @@ class LoxFunction(LoxCallable):
         for param, value in zip(self.func.params, args):
             env.define(param.lexeme, value)
 
-        interpreter.execute_block(self.func.body.statements, env)
+        try:
+            interpreter.execute_block(self.func.body.statements, env)
+        except Return as r:
+            return r.value
 
     def __str__(self):
-        return f"<fn {self.func.name.lexeme}>";
+        return f"<fn {self.func.name.lexeme}>"

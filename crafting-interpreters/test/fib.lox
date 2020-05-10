@@ -1,0 +1,9 @@
+fun fib(n){
+  if (n < 2) {
+    return 1;
+  }
+
+  return fib(n-1) + fib(n-2);
+}
+
+for(var i=0; i < 10; i = i +1) { print fib(i); }

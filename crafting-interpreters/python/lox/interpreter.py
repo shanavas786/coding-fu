@@ -1,6 +1,6 @@
 from .callables import LoxCallable, LoxFunction
 from .environment import Environment
-from .error_logger import ErrorLogger, RuntimeException
+from .error_logger import ErrorLogger, Return, RuntimeException
 from .lib import clock
 from .token_types import TokenType
 
@@ -172,3 +172,10 @@ class Interpreter:
     def visitFunctionStmt(self, stmt):
         func = LoxFunction(stmt)
         self.env.define(stmt.name.lexeme, func)
+
+    def visitReturnStmt(self, ret):
+        val = None
+        if ret.exp is not None:
+            val = self.evaluate(ret.exp)
+
+        raise Return(val)

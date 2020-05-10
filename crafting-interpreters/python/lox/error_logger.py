@@ -29,3 +29,9 @@ class RuntimeException(Exception):
     def __init__(self, token, message):
         super().__init__(message)
         self.token = token
+
+
+class Return(RuntimeException):
+    def __init__(self, value):
+        self.value = value
+        super().__init__(None, "")

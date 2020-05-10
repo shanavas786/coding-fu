@@ -18,6 +18,7 @@ expr = {
         "Function": [("Token", "name"), ("list", "params"), ("Block", "body")],
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
+        "Return": [("Expr", "exp")],
         "Var": [("Token", "name"), ("Expr", "value")],
         "While": [("Expr", "cond"), ("Stmt", "body")],
     },

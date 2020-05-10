@@ -113,6 +113,7 @@ class Parser:
                      | for_statement
                      | expr_statement
                      | print_statement
+                     | return_statement
                      | block
         """
         if self.match(TokenType.IF):
@@ -126,6 +127,9 @@ class Parser:
 
         if self.match(TokenType.PRINT):
             return self.print_statement()
+
+        if self.match(TokenType.RETURN):
+            return self.return_statement()
 
         if self.match(TokenType.LEFT_BRACE):
             return self.block()
@@ -201,6 +205,15 @@ class Parser:
         expr = self.expression()
         self.consume(TokenType.SEMI_COLON, "expected semicolon")
         return Ast.Print(expr)
+
+    def return_statement(self):
+        expr = None
+
+        if not self.check(TokenType.SEMI_COLON):
+            expr = self.expression()
+
+        self.consume(TokenType.SEMI_COLON, "expected semicolon")
+        return Ast.Return(expr)
 
     def expression_statement(self):
         expr = self.expression()
