@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from .token_types import TokenType, Token
 from .error_logger import ErrorLogger
+from .token_types import Token, TokenType
 
 KEYWORDS = {
     kw.value: kw
@@ -132,7 +132,7 @@ class Scanner:
         elif ch.isalpha():
             self.handle_identifier()
         else:
-            ErrorLogger.error(self.line, f"Unexpected character {ch}")
+            ErrorLogger.error(self.line, message=f"Unexpected character {ch}")
 
     def handle_string(self):
         while not (self.is_end() or self.peek() == '"'):
@@ -151,7 +151,7 @@ class Scanner:
         self.add_token(TokenType.STRING, val)
 
     def handle_identifier(self):
-        while self.peek().isalnum():
+        while self.peek().isalnum() or self.peek() == "_":
             self.get_char()
 
         ident = self.source[self.start : self.current]

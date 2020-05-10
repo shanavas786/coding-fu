@@ -16,14 +16,15 @@ class LoxCallable(ABC):
 
 
 class LoxFunction(LoxCallable):
-    def __init__(self, func):
+    def __init__(self, func, closure):
+        self.closure = closure
         self.func = func
 
     def arity(self) -> int:
         return len(self.func.params)
 
     def call(self, interpreter, args):
-        env = Environment(interpreter.globs)
+        env = Environment(self.closure)
         for param, value in zip(self.func.params, args):
             env.define(param.lexeme, value)
 
