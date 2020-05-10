@@ -1,7 +1,8 @@
+from .callables import LoxCallable, LoxFunction
 from .environment import Environment
+from .error_logger import ErrorLogger, RuntimeException
+from .lib import clock
 from .token_types import TokenType
-from .error_logger import RuntimeException, ErrorLogger
-
 
 OPERATOR_MAP = {
     TokenType.LESSER: "__lt__",
@@ -17,7 +18,10 @@ OPERATOR_MAP = {
 
 class Interpreter:
     def __init__(self):
-        self.env = Environment()
+        self.globs = Environment()
+        self.env = self.globs
+
+        self.globs.define("clock", clock)
 
     def interpret(self, statements):
         try:
@@ -136,6 +140,22 @@ class Interpreter:
             else:
                 return left
 
+    def visitCallExpr(self, expr):
+        callee = self.evaluate(expr.callee)
+        args = list(map(self.evaluate, expr.args))
+
+        if not isinstance(callee, LoxCallable):
+            raise RuntimeException(expr.paren, "can only call functions and classes")
+
+        expected = callee.arity()
+        given = len(args)
+        if given != expected:
+            raise RuntimeException(
+                expr.paren, f"expected {expected} args but got {given}."
+            )
+
+        return callee.call(self, args)
+
     def visitBlockStmt(self, stmt):
         self.execute_block(stmt.statements, Environment(self.env))
 
@@ -148,3 +168,7 @@ class Interpreter:
     def visitWhileStmt(self, stmt):
         while self.isTruthy(self.evaluate(stmt.cond)):
             self.execute(stmt.body)
+
+    def visitFunctionStmt(self, stmt):
+        func = LoxFunction(stmt)
+        self.env.define(stmt.name.lexeme, func)

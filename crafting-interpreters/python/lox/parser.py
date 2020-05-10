@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from .token_types import TokenType, Token
-from .error_logger import ErrorLogger
 from .ast import Ast
+from .error_logger import ErrorLogger
+from .token_types import Token, TokenType
 
 
 class ParseError(RuntimeError):
@@ -60,14 +60,38 @@ class Parser:
 
     def declaration(self):
         """
-        declaration -> varDecl | statement
+        declaration -> funDecl | varDecl | statement
         """
         try:
+            if self.match(TokenType.FUN):
+                return self.function_declaration("function")
+
             if self.match(TokenType.VAR):
                 return self.variable_declaration()
             return self.statement()
         except ParseError:
             self.synchronize()
+
+    def function_declaration(self, kind):
+        """
+        funDecl -> IDENTIFIER "(" params? ")" block
+        params -> IDENTIFIER ("," IDENTIFIER)*
+        """
+        name = self.consume(TokenType.IDENTIFIER, f"expected {kind} name.")
+        self.consume(TokenType.LEFT_PAREN, f"expected ( after {kind} name.")
+
+        params = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            params.append(self.consume(TokenType.IDENTIFIER, "expected identifier."))
+            while self.match(TokenType.COMMA):
+                params.append(
+                    self.consume(TokenType.IDENTIFIER, "expected identifier.")
+                )
+        self.consume(TokenType.RIGHT_PAREN, "expected ) after params")
+        self.consume(TokenType.LEFT_BRACE, f"expected {{ before {kind} body.")
+        body = self.block()
+
+        return Ast.Function(name, params, body)
 
     def variable_declaration(self):
         """
@@ -306,7 +330,7 @@ class Parser:
 
     def unary(self) -> Ast.Expr:
         """
-        unary -> ("!" | "-") unary | primary"
+        unary -> ("!" | "-") unary | call"
         """
         if self.match(TokenType.MINUS, TokenType.NOT):
             op = self.previous()
@@ -314,7 +338,35 @@ class Parser:
             expr = Ast.Unary(op, right)
             return expr
 
-        return self.primary()
+        return self.call()
+
+    def call(self) -> Ast.Expr:
+        """
+        call -> primary ("(" arguments? ")")*
+        """
+        expr = self.primary()
+
+        while self.match(TokenType.LEFT_PAREN):
+            args = self.arguments()
+            token = self.consume(TokenType.RIGHT_PAREN, "expected ).")
+            expr = Ast.Call(expr, token, args)
+
+        return expr
+
+    def arguments(self) -> list:
+        """
+        arguments -> expression (", " expression)*
+        """
+        args = []
+        while not self.check(TokenType.RIGHT_PAREN):
+            args.append(self.expression())
+            while self.match(TokenType.COMMA):
+                args.append(self.expression())
+
+        if len(args) > 255:
+            self.error(self.peek(), "cannot have more than 255 arguments")
+
+        return args
 
     def primary(self) -> Ast.Expr:
         """

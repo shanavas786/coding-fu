@@ -5,6 +5,7 @@ expr = {
     "Expr": {
         "Assign": [("Token", "name"), ("Expr", "value")],
         "Binary": [("Expr", "left"), ("Token", "op"), ("Expr", "right")],
+        "Call": [("Expr", "callee"), ("Token", "paren"), ("list", "args")],
         "Logical": [("Expr", "left"), ("Token", "op"), ("Expr", "right")],
         "Grouping": [("Expr", "exp")],
         "Literal": [("object", "value")],
@@ -14,6 +15,7 @@ expr = {
     "Stmt": {
         "If": [("Expr", "cond"), ("Stmt", "then_branch"), ("Stmt", "else_branch")],
         "Block": [("list", "statements")],
+        "Function": [("Token", "name"), ("list", "params"), ("Block", "body")],
         "Expression": [("Expr", "exp")],
         "Print": [("Expr", "exp")],
         "Var": [("Token", "name"), ("Expr", "value")],
