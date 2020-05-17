@@ -20,6 +20,7 @@ class Interpreter:
     def __init__(self):
         self.globs = Environment()
         self.env = self.globs
+        self.locs = {}
 
         self.globs.define("clock", clock)
 
@@ -41,6 +42,15 @@ class Interpreter:
         Execute a statement
         """
         stmt.accept(self)
+
+    def lookupVariable(self, name, expr):
+        depth = self.locs.get(expr)
+        if depth is None:
+            return self.globs.get(name)
+        return self.env.getAt(depth, name.lexeme)
+
+    def resolve(self, expr, depth):
+        self.locs[expr] = depth
 
     def execute_block(self, statements, env):
         prev_env = self.env
@@ -116,13 +126,18 @@ class Interpreter:
         self.env.define(name, val)
 
     def visitVariableExpr(self, expr):
-        name = expr.name
-        return self.env.get(name)
+        return self.lookupVariable(expr.name, expr)
 
     def visitAssignExpr(self, expr):
         name = expr.name
         val = self.evaluate(expr.value)
-        self.env.assign(name, val)
+        depth = self.locs.get(name)
+
+        if depth is None:
+            self.globs.assign(name, val)
+        else:
+            self.env.assignAt(depth, name, val)
+
         return val
 
     def visitLogicalExpr(self, expr):

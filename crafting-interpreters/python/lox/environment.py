@@ -28,3 +28,16 @@ class Environment:
             return self.enclosing.assign(name, val)
 
         raise RuntimeException(name, f"Undefined variable {name.lexeme}.")
+
+    def getAt(self, depth, name):
+        return self.nthAncestor(depth).values.get(name)
+
+    def assignAt(self, depth, name, value):
+        self.nthAncestor(depth).values[name] = value
+
+    def nthAncestor(self, n):
+        env = self
+        while n:
+            env = env.enclosing
+            n = n - 1
+        return env
