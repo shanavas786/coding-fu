@@ -75,3 +75,7 @@
 - and and or are shortcircuit operators
 - a == not b is syntax error
 - <<, >> Negative shift counts are illegal and cause a ValueError to be raised.
+
+- filter(None, [1,2,3,4,5])
+
+if function is null, return all true values
