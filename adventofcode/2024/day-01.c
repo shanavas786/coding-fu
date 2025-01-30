@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "libs/sort.h"
+#include "libs/utils.h"
 
 int main(int argc, char *argv[]) {
   if (argc < 1) {

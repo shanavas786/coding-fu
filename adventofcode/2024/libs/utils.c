@@ -1,4 +1,15 @@
-#include "sort.h"
+#include "utils.h"
+
+int fread_all(FILE *file, char **buffer) {
+  fseek(file, 0, SEEK_END);
+  long fsize = ftell(file);
+  fseek(file, 0, SEEK_SET); /* same as rewind(f); */
+
+  *buffer = malloc(fsize + 1);
+  fread(*buffer, fsize, 1, file);
+
+  return fsize;
+}
 
 void swap(int *i, int *j) {
   int temp = *i;
