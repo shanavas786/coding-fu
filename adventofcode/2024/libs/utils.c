@@ -14,25 +14,23 @@ int fread_all(FILE *file, char **buffer) {
   return fsize;
 }
 
-
 /**
  * Parse given string as int
  * Returns a pointer to the first invalid character
  */
 int scan_int(char **p) {
-    int num = 0;
-    if ( **p < '0' || **p > '9') {
-        return 0;
-    }
+  int num = 0;
+  if (**p < '0' || **p > '9') {
+    return 0;
+  }
 
-    while (**p >= '0' && **p <= '9') {
-        num = num * 10 + (**p - '0');
-        (*p)++;
-    }
+  while (**p >= '0' && **p <= '9') {
+    num = num * 10 + (**p - '0');
+    (*p)++;
+  }
 
-    return num;
+  return num;
 }
-
 
 /**
  * swap to numbers
@@ -42,7 +40,6 @@ void swap(int *i, int *j) {
   *i = *j;
   *j = temp;
 }
-
 
 void q_sort(int *array, int size) {
   if (size < 2) {
@@ -54,11 +51,11 @@ void q_sort(int *array, int size) {
   int right = size - 1;
 
   while (left < right) {
-    while(array[left] <= array[pivot] && left < size) {
+    while (array[left] <= array[pivot] && left < size) {
       left++;
     }
 
-    while(array[right] > array[pivot] && right > 0) {
+    while (array[right] > array[pivot] && right > 0) {
       right--;
     }
 
@@ -69,6 +66,19 @@ void q_sort(int *array, int size) {
 
   swap(array + pivot, array + right);
 
-  q_sort(array, right );
+  q_sort(array, right);
   q_sort(array + right + 1, size - right - 1);
+}
+
+char *ptrmin(char *ptr1, char *ptr2) {
+  if (ptr1 == NULL)
+    return ptr2;
+
+  if (ptr2 == NULL)
+    return ptr1;
+
+  if (ptr1 < ptr2)
+    return ptr1;
+
+  return ptr2;
 }
