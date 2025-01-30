@@ -1,5 +1,8 @@
 #include "utils.h"
 
+/**
+ * Read the entire file into a buffer
+ */
 int fread_all(FILE *file, char **buffer) {
   fseek(file, 0, SEEK_END);
   long fsize = ftell(file);
@@ -11,6 +14,29 @@ int fread_all(FILE *file, char **buffer) {
   return fsize;
 }
 
+
+/**
+ * Parse given string as int
+ * Returns a pointer to the first invalid character
+ */
+int scan_int(char **p) {
+    int num = 0;
+    if ( **p < '0' || **p > '9') {
+        return 0;
+    }
+
+    while (**p >= '0' && **p <= '9') {
+        num = num * 10 + (**p - '0');
+        (*p)++;
+    }
+
+    return num;
+}
+
+
+/**
+ * swap to numbers
+ */
 void swap(int *i, int *j) {
   int temp = *i;
   *i = *j;

@@ -6,6 +6,8 @@
 
 int fread_all(FILE *file, char **buffer);
 
+int scan_int(char **p);
+
 
 void swap(int *i, int *j);
 void q_sort(int *array, int size);

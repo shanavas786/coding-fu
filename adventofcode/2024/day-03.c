@@ -3,23 +3,6 @@
 #include <string.h>
 #include "libs/utils.h"
 
-#define BUFF_SIZE 1024 * 1024 * 1024
-
-
-int scan_int(char **p) {
-    int num = 0;
-    if ( **p < '0' || **p > '9') {
-        return 0;
-    }
-
-    while (**p >= '0' && **p <= '9') {
-        num = num * 10 + (**p - '0');
-        (*p)++;
-    }
-
-    return num;
-}
-
 int main(int argc, char *argv[]) {
   if (argc < 1) {
     exit(1);
@@ -56,6 +39,8 @@ int main(int argc, char *argv[]) {
       p++;
   }
 
+  free(buffer);
+  fclose(file);
 
   printf("sum of multiplications: %ld\n", sum);
   return 0;

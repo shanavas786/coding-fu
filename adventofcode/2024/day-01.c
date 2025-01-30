@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
     count++;
   }
 
+  fclose(file);
+
   q_sort(list1, count);
   q_sort(list2, count);
 
@@ -84,6 +86,9 @@ int main(int argc, char *argv[]) {
 
     similarity_score += number * left_count * right_count;
   }
+
+  free(list1);
+  free(list2);
 
   printf("similarity score: %d\n", similarity_score);
 

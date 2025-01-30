@@ -54,8 +54,6 @@ int is_safe_with_dampener(int arr[], int size) {
       idx++;
     }
 
-
-
     if (is_safe(arr_copy, size - 1)) {
       safe = 1;
       break;
@@ -105,6 +103,8 @@ int main(int argc, char *argv[]) {
       safe_reports_with_dampner++;
     }
   }
+
+  fclose(file);
 
   printf("number of safe reports: %d\n", safe_reports);
   printf("number of safe reports with dampner: %d\n", safe_reports_with_dampner);
