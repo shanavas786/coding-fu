@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <stdlib.h>
 
 /**
  * Read the entire file into a buffer
@@ -81,4 +82,26 @@ char *ptrmin(char *ptr1, char *ptr2) {
     return ptr1;
 
   return ptr2;
+}
+
+
+// transpose a grid
+// returns a new pointer to the transposed grid
+char **transpose(char **grid, int rows, int cols) {
+
+  // intialize tgrid
+  char **tgrid = malloc(cols * sizeof(char *));
+  for (int i = 0; i < cols; i++) {
+    tgrid[i] = malloc((rows + 1)* sizeof(char));
+  }
+
+
+  for (int j = 0; j < cols; j++) {
+    for (int i = 0; i < rows; i++) {
+      tgrid[j][i] = grid[i][j];
+    }
+    tgrid[j][rows] = '\0';
+  }
+
+  return tgrid;
 }

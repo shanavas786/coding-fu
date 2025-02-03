@@ -14,4 +14,6 @@ void q_sort(int *array, int size);
 
 char *ptrmin(char * ptr1, char * ptr2);
 
+char **transpose(char **grid, int rows, int cols);
+
 #endif // UTILS_H_
