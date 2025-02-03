@@ -36,9 +36,11 @@ int main(int argc, char *argv[]) {
   }
 
   int matches = 0;
+  int xmatches = 0;
   // horizontal search
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
+
       // horizontal
       if (cols - col >= 4) {
         // forward
@@ -97,6 +99,34 @@ int main(int argc, char *argv[]) {
           matches++;
         }
       }
+
+      if (row > 0 && row < rows - 1 && col > 0 && col < cols - 1) {
+        if (grid[row][col] == 'A') {
+          if (grid[row - 1][col - 1] == 'M' && grid[row - 1][col + 1] == 'M' &&
+              grid[row + 1][col - 1] == 'S' && grid[row + 1][col + 1] == 'S') {
+            printf("%d,%d\n", row, col);
+            xmatches++;
+          }
+
+          if (grid[row - 1][col - 1] == 'M' && grid[row - 1][col + 1] == 'S' &&
+              grid[row + 1][col - 1] == 'M' && grid[row + 1][col + 1] == 'S') {
+            printf("%d,%d\n", row, col);
+            xmatches++;
+          }
+
+          if (grid[row - 1][col - 1] == 'S' && grid[row - 1][col + 1] == 'S' &&
+              grid[row + 1][col - 1] == 'M' && grid[row + 1][col + 1] == 'M') {
+            printf("%d,%d\n", row, col);
+            xmatches++;
+          }
+
+          if (grid[row - 1][col - 1] == 'S' && grid[row - 1][col + 1] == 'M' &&
+              grid[row + 1][col - 1] == 'S' && grid[row + 1][col + 1] == 'M') {
+            printf("%d,%d\n", row, col);
+            xmatches++;
+          }
+        }
+      }
     }
   }
 
@@ -107,6 +137,7 @@ int main(int argc, char *argv[]) {
   free(grid);
   fclose(file);
 
-  printf("matches: %d", matches);
+  printf("XMAS matches: %d\n", matches);
+  printf("X-MAS matches: %d\n", xmatches);
   return 0;
 }
