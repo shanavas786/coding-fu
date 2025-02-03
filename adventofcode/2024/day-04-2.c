@@ -104,25 +104,21 @@ int main(int argc, char *argv[]) {
         if (grid[row][col] == 'A') {
           if (grid[row - 1][col - 1] == 'M' && grid[row - 1][col + 1] == 'M' &&
               grid[row + 1][col - 1] == 'S' && grid[row + 1][col + 1] == 'S') {
-            printf("%d,%d\n", row, col);
             xmatches++;
           }
 
           if (grid[row - 1][col - 1] == 'M' && grid[row - 1][col + 1] == 'S' &&
               grid[row + 1][col - 1] == 'M' && grid[row + 1][col + 1] == 'S') {
-            printf("%d,%d\n", row, col);
             xmatches++;
           }
 
           if (grid[row - 1][col - 1] == 'S' && grid[row - 1][col + 1] == 'S' &&
               grid[row + 1][col - 1] == 'M' && grid[row + 1][col + 1] == 'M') {
-            printf("%d,%d\n", row, col);
             xmatches++;
           }
 
           if (grid[row - 1][col - 1] == 'S' && grid[row - 1][col + 1] == 'M' &&
               grid[row + 1][col - 1] == 'S' && grid[row + 1][col + 1] == 'M') {
-            printf("%d,%d\n", row, col);
             xmatches++;
           }
         }
