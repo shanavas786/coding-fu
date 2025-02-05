@@ -16,4 +16,6 @@ char *ptrmin(char * ptr1, char * ptr2);
 
 char **transpose(char **grid, int rows, int cols);
 
+int find(int arr[], int size, int elem);
+
 #endif // UTILS_H_

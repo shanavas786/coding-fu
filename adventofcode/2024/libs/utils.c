@@ -105,3 +105,14 @@ char **transpose(char **grid, int rows, int cols) {
 
   return tgrid;
 }
+
+
+
+int find(int arr[], int size, int elem) {
+  for (int i = 0; i < size; i++) {
+    if (arr[i] == elem)
+      return 1;
+  }
+
+  return 0;
+}
