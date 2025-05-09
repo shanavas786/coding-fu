@@ -87,3 +87,12 @@ scope: where a variable is visible
 * Unary operators:
   a. `++`, `--`, `+` ,`-` and `*` (dereferencing)
   b. precedence is from right to left
+
+## Ch 8: Parameters
+
+* Pass by value
+* Pass by reference
+
+* Actual parameters - values appear in function calls
+* Formal parameters - variables as they appear in function decleration
+* Variadic functions - function that can accept arbitrary number of actual parameters
