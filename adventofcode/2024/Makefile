@@ -23,6 +23,8 @@ day-05: day-05.c
 day-06: day-06.c
 	cc $(CFLAGS) -o build/day-06 day-06.c libs/utils.c
 
+day-07: day-07.c
+	cc $(CFLAGS) -o build/day-07 day-07.c libs/utils.c
 
 run: day-${day}
 	"./build/day-${day}" "inputs/day-${day}.txt"
