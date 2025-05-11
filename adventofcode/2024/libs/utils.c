@@ -84,7 +84,6 @@ char *ptrmin(char *ptr1, char *ptr2) {
   return ptr2;
 }
 
-
 // transpose a grid
 // returns a new pointer to the transposed grid
 char **transpose(char **grid, int rows, int cols) {
@@ -92,9 +91,8 @@ char **transpose(char **grid, int rows, int cols) {
   // intialize tgrid
   char **tgrid = malloc(cols * sizeof(char *));
   for (int i = 0; i < cols; i++) {
-    tgrid[i] = malloc((rows + 1)* sizeof(char));
+    tgrid[i] = malloc((rows + 1) * sizeof(char));
   }
-
 
   for (int j = 0; j < cols; j++) {
     for (int i = 0; i < rows; i++) {
@@ -105,8 +103,6 @@ char **transpose(char **grid, int rows, int cols) {
 
   return tgrid;
 }
-
-
 
 int find(int arr[], int size, int elem) {
   for (int i = 0; i < size; i++) {
