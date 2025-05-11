@@ -99,6 +99,16 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  for (int i = 0; i < rows; i++) {
+    free(maze[i]);
+    free(antinodes[i]);
+    free(antinodes2[i]);
+  }
+
+  free(maze);
+  free(antinodes);
+  free(antinodes2);
+
   printf("Number of antinodes: %d\n", num_antinodes);
   printf("Number of antinodes2: %d\n", num_antinodes2);
   return 0;
