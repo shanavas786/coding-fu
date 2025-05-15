@@ -4,9 +4,11 @@
 
 #define GRID_SIZE (256 * 256)
 
-int trace(char **maze, int rows, int cols, int row, int col) {
+void trace(char **maze, int rows, int cols, int row, int col, int *score,
+           int *rating) {
   int queue[GRID_SIZE];
   int nines[GRID_SIZE];
+  *rating = 0;
   for (int i = 0; i < GRID_SIZE; i++) {
     queue[i] = 0;
     nines[i] = 0;
@@ -26,6 +28,7 @@ int trace(char **maze, int rows, int cols, int row, int col) {
     c = (idx - 1) % rows;
     if (maze[r][c] == '9') {
       nines[idx - 1] = 1;
+      (*rating)++;
     }
 
     // left
@@ -48,12 +51,10 @@ int trace(char **maze, int rows, int cols, int row, int col) {
       queue[widx++] = idx + rows;
     }
   }
-  int score = 0;
+  *score = 0;
   for (int i = 0; i < GRID_SIZE; i++) {
-    score += nines[i];
+    (*score) += nines[i];
   }
-
-  return score;
 }
 
 int main(int argc, char *argv[]) {
@@ -77,15 +78,21 @@ int main(int argc, char *argv[]) {
   int cols = (int)strlen(maze[0]) - 1; // strip newline
 
   int total_score = 0;
+  int total_rating = 0;
+  int score;
+  int rating;
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (maze[i][j] == '0') {
-        total_score += trace(maze, rows, cols, i, j);
+        trace(maze, rows, cols, i, j, &score, &rating);
+        total_score += score;
+        total_rating += rating;
       }
     }
   }
 
   printf("score: %d\n", total_score);
+  printf("rating: %d\n", total_rating);
 
   for (int i = 0; i < rows; i++) {
     free(maze[i]);
