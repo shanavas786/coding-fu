@@ -1,3 +1,4 @@
+#include "libs/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -69,13 +70,9 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  char **maze = malloc(256 * sizeof(*maze));
-  int rows = 0;
-  do {
-    maze[rows] = malloc(256 * sizeof(**maze));
-  } while (fgets(maze[rows++], 256 * sizeof(**maze), file));
-  rows--;
-  int cols = (int)strlen(maze[0]) - 1; // strip newline
+  int rows;
+  int cols;
+  char **maze = read_maze(file, &rows, &cols);
 
   int total_score = 0;
   int total_rating = 0;

@@ -15,17 +15,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  char **maze = malloc(256 * sizeof(*maze));
   int num_antinodes = 0;
   int num_antinodes2 = 0;
-
-  int rows = 0;
-  do {
-    maze[rows] = malloc(256 * sizeof(**maze));
-  } while (fgets(maze[rows++], 256 * sizeof(**maze), file));
-  rows--;
-  int cols = (int)strlen(maze[0]) - 1; // strip newline
-
+  int rows;
+  int cols;
+  char **maze = read_maze(file, &rows, &cols);
   printf("rows: %d, cols: %d\n", rows, cols);
 
   int **antinodes = (int **)malloc(rows * sizeof(*antinodes));

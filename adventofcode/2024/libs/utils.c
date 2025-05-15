@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Read the entire file into a buffer
@@ -111,4 +112,18 @@ int find(int arr[], int size, int elem) {
   }
 
   return 0;
+}
+
+
+
+char **read_maze(FILE *file,int *rows,int *cols) {
+  char **maze = malloc(256 * sizeof(*maze));
+  *rows = 0;
+  do {
+    maze[*rows] = malloc(256 * sizeof(**maze));
+  } while (fgets(maze[(*rows)++], 256 * sizeof(**maze), file));
+  rows--;
+  *cols = (int)strlen(maze[0]) - 1; // strip newline
+
+  return maze;
 }

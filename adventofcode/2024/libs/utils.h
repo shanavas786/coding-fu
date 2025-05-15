@@ -18,4 +18,6 @@ char **transpose(char **grid, int rows, int cols);
 
 int find(int arr[], int size, int elem);
 
+char **read_maze(FILE *file,int *rows,int *cols);
+
 #endif // UTILS_H_
