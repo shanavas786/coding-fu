@@ -127,3 +127,14 @@ char **read_maze(FILE *file,int *rows,int *cols) {
 
   return maze;
 }
+
+
+int num_digits(long long num) {
+  int digits = 0;
+  while (num > 0) {
+    digits++;
+    num /= 10;
+  }
+
+  return digits;
+}

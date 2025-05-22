@@ -20,4 +20,6 @@ int find(int arr[], int size, int elem);
 
 char **read_maze(FILE *file,int *rows,int *cols);
 
+int num_digits(long long num);
+
 #endif // UTILS_H_
