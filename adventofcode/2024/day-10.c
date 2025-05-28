@@ -73,6 +73,7 @@ int main(int argc, char *argv[]) {
   int rows;
   int cols;
   char **maze = read_maze(file, &rows, &cols);
+  fclose(file);
 
   int total_score = 0;
   int total_rating = 0;

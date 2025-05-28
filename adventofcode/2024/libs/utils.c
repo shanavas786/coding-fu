@@ -1,6 +1,35 @@
 #include "utils.h"
+#include <asm-generic/errno.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+
+int stack[STACK_SIZE];
+int stack_ptr = -1;
+
+void stack_init() {
+  // reset the ptr to head;
+  stack_ptr = -1;
+}
+
+int stack_pop() {
+  if (stack_ptr == -1) {
+    errno = ENODATA;
+    return stack[0];
+  } else {
+    return stack[stack_ptr--];
+  }
+}
+
+void stack_push(int val) {
+  if (stack_ptr == STACK_SIZE) {
+    errno = ENOBUFS;
+  } else {
+    stack[++stack_ptr] = val;
+  }
+}
+
+int stack_size() { return stack_ptr + 1; }
 
 /**
  * Read the entire file into a buffer
@@ -114,20 +143,19 @@ int find(int arr[], int size, int elem) {
   return 0;
 }
 
-
-
-char **read_maze(FILE *file,int *rows,int *cols) {
+char **read_maze(FILE *file, int *rows, int *cols) {
   char **maze = malloc(256 * sizeof(*maze));
   *rows = 0;
   do {
     maze[*rows] = malloc(256 * sizeof(**maze));
   } while (fgets(maze[(*rows)++], 256 * sizeof(**maze), file));
-  rows--;
+  //
+  (*rows)--;
+  free(maze[*rows]); // free the last block
   *cols = (int)strlen(maze[0]) - 1; // strip newline
 
   return maze;
 }
-
 
 int num_digits(long long num) {
   int digits = 0;
