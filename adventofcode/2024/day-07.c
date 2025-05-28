@@ -89,16 +89,17 @@ int main(int argc, char *argv[]) {
     }
 
     if (is_valid(res, operands, size)) {
-      printf("valid: %s", line);
+      /* printf("valid: %s", line); */
       calib_sum += res;
       calib_sum2 += res;
     } else if (is_valid_with_concat(res, operands, size)) {
       calib_sum2 += res;
     } else {
-      printf("invalid: %s", line);
+      /* printf("invalid: %s", line); */
     }
   }
 
+  fclose(file);
   printf("sum of calibrated eqn results: %lld\n", calib_sum);
   printf("sum of calibrated eqn results2: %lld\n", calib_sum2);
   return 0;

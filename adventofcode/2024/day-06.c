@@ -170,4 +170,5 @@ int main(int argc, char *argv[]) {
   }
   free(maze);
   free(maze2);
+  fclose(file);
 }

@@ -1,6 +1,7 @@
 # CFLAGS ?= -g
 
-all: day-01 day-02 day-03
+all: day-01 day-02 day-03 day-04 day-04-2 day-05 day-05 day-07 \
+	day-08 day-09 day-10 day-11 day-11-2 day-12
 
 day-01: day-01.c libs/utils.c
 	cc $(CFLAGS) -o build/day-01 day-01.c libs/utils.c
@@ -46,3 +47,6 @@ day-12: day-12.c
 
 run: day-${day}
 	"./build/day-${day}" "inputs/day-${day}.txt"
+
+check: day-${day}
+	valgrind "./build/day-${day}" "inputs/day-${day}.txt"

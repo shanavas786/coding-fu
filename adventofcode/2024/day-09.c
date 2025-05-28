@@ -120,5 +120,6 @@ int main(int argc, char *argv[]) {
   }
 
   free(free_blocks);
+  fclose(file);
   printf("\nchecksum: %lld\n", checksum);
 }

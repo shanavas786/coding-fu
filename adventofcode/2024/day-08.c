@@ -103,6 +103,7 @@ int main(int argc, char *argv[]) {
   free(antinodes);
   free(antinodes2);
 
+  fclose(file);
   printf("Number of antinodes: %d\n", num_antinodes);
   printf("Number of antinodes2: %d\n", num_antinodes2);
   return 0;

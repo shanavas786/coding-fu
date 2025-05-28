@@ -19,10 +19,10 @@ int main(int argc, char *argv[]) {
   long sum = 0;
   long sum_enabled = 0;
 
-  char *buffer;
+  char *buffer = NULL;
   int size = fread_all(file, &buffer);
   char *p = buffer;
-  char *doptr, *dontptr, *mulptr;
+  char *doptr = NULL, *dontptr = NULL, *mulptr = NULL;
   int enabled = 1;
 
   for (;;) {
