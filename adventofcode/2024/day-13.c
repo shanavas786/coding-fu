@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
         tokens2 += solve_puzzle_2(ax, ay, bx, by, px + 10000000000000ll, py + 10000000000000ll);
     } while (fgets(line, sizeof(line), file));
 
+    fclose(file);
     printf("total tokens: %ld\n", tokens);
     printf("total tokens2: %llu\n", tokens2);
 }
