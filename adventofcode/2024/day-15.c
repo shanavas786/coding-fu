@@ -5,9 +5,15 @@
 #include <string.h>
 
 #define GRID_SIZE 128
+#define RIGHT 1
+#define LEFT -1
+#define UP -1
+#define DOWN 1
 
-int move_box_right(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
-    for (int i = bx; i < cols; i++) {
+// dir 1=>right, dir-1 =>left
+int move_box_x(char grid[][GRID_SIZE], int rows, int cols, int bx, int by,
+               int dir) {
+    for (int i = bx; i < cols && i > 0; i = i + dir) {
         if (grid[by][i] == '#') {
             break;
         } else if (grid[by][i] == '.') {
@@ -21,36 +27,9 @@ int move_box_right(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
     return 0;
 }
 
-int move_box_left(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
-    for (int i = bx; i > 0; i--) {
-        if (grid[by][i] == '#') {
-            break;
-        } else if (grid[by][i] == '.') {
-            // swap
-            grid[by][i] = 'O';
-            grid[by][bx] = '.';
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int move_box_up(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
-    for (int i = by; i > 0; i--) {
-        if (grid[i][bx] == '#') {
-            break;
-        } else if (grid[i][bx] == '.') {
-            // swap
-            grid[i][bx] = 'O';
-            grid[by][bx] = '.';
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int move_box_down(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
-    for (int i = by; i < rows; i++) {
+int move_box_y(char grid[][GRID_SIZE], int rows, int cols, int bx, int by,
+               int dir) {
+    for (int i = by; i > 0 && i < rows; i = i + dir) {
         if (grid[i][bx] == '#') {
             break;
         } else if (grid[i][bx] == '.') {
@@ -70,49 +49,40 @@ int move(char grid[][GRID_SIZE], int rows, int cols, int *x, int *y, char sym) {
 
     int moved = 0;
 
+    int x_dir = 0;
+    int y_dir = 0;
+
     switch (sym) {
     case '>':
-        // move right
-        if (grid[ry][rx + 1] == '.' ||
-            move_box_right(grid, rows, cols, rx + 1, ry)) {
-            grid[ry][rx + 1] = '@';
-            grid[ry][rx] = '.';
-            moved = 1;
-            *x += 1;
-        }
-        break;
+        x_dir = RIGHT;
     case '<':
-        // move left
-        if (grid[ry][rx - 1] == '.' ||
-            move_box_left(grid, rows, cols, rx - 1, ry)) {
-            grid[ry][rx - 1] = '@';
+        if (x_dir == 0) {
+            // not fallthrough
+            x_dir = LEFT;
+        }
+        if (grid[ry][rx + x_dir] == '.' ||
+            move_box_x(grid, rows, cols, rx + x_dir, ry, x_dir)) {
+            grid[ry][rx + x_dir] = '@';
             grid[ry][rx] = '.';
             moved = 1;
-            *x -= 1;
+            *x += x_dir;
         }
-
         break;
     case 'v':
-        // move down
-        if (grid[ry + 1][rx] == '.' ||
-            move_box_down(grid, rows, cols, rx, ry + 1)) {
-            grid[ry + 1][rx] = '@';
-            grid[ry][rx] = '.';
-            moved = 1;
-            *y += 1;
+        y_dir = DOWN;
+    case '^':
+        if (y_dir == 0) {
+            // not fallthrough
+            y_dir = UP;
         }
 
-        break;
-    case '^':
-        // move up
-        if (grid[ry - 1][rx] == '.' ||
-            move_box_up(grid, rows, cols, rx, ry - 1)) {
-            grid[ry - 1][rx] = '@';
+        if (grid[ry + y_dir][rx] == '.' ||
+            move_box_y(grid, rows, cols, rx, ry + y_dir, y_dir)) {
+            grid[ry + y_dir][rx] = '@';
             grid[ry][rx] = '.';
             moved = 1;
-            *y -= 1;
+            *y += y_dir;
         }
-        break;
     default:
         break;
     }
