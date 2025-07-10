@@ -123,8 +123,8 @@ int move_box_left2(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
     return 0;
 }
 
-int can_move_box_up(char grid[][GRID_SIZE], int rows, int cols, int bx,
-                    int by) {
+int can_move_box_y(char grid[][GRID_SIZE], int rows, int cols, int bx, int by,
+                   int dir) {
     int c1 = bx;
     int c2;
     if (grid[by][bx] == '[') {
@@ -133,37 +133,37 @@ int can_move_box_up(char grid[][GRID_SIZE], int rows, int cols, int bx,
         c2 = bx - 1;
     }
 
-    if (grid[by - 1][c1] == '#' || grid[by - 1][c2] == '#') {
+    if (grid[by + dir][c1] == '#' || grid[by + dir][c2] == '#') {
         return 0;
     }
 
-    if (grid[by - 1][c1] == '.' && grid[by - 1][c2] == '.') {
+    if (grid[by + dir][c1] == '.' && grid[by + dir][c2] == '.') {
         return 1;
     }
 
-    if (grid[by - 1][c1] != '.' && grid[by - 1][c2] != '.') {
+    if (grid[by + dir][c1] != '.' && grid[by + dir][c2] != '.') {
         // above both c1 and c2 are objects
-        if (grid[by - 1][c1] == grid[by][c1]) {
+        if (grid[by + dir][c1] == grid[by][c1]) {
             // objects are rightly alighned
-            return can_move_box_up(grid, rows, cols, c1, by - 1);
+            return can_move_box_y(grid, rows, cols, c1, by + dir, dir);
         } else {
-            return can_move_box_up(grid, rows, cols, c1, by - 1) &&
-                   can_move_box_up(grid, rows, cols, c2, by - 1);
+            return can_move_box_y(grid, rows, cols, c1, by + dir, dir) &&
+                   can_move_box_y(grid, rows, cols, c2, by + dir, dir);
         }
     }
 
     // one of them is . and other is an object
-    if (grid[by - 1][c1] == '.') {
+    if (grid[by + dir][c1] == '.') {
         // above c2 is an object
-        return can_move_box_up(grid, rows, cols, c2, by - 1);
+        return can_move_box_y(grid, rows, cols, c2, by + dir, dir);
     }
 
     // above c1 is an object
-    return can_move_box_up(grid, rows, cols, c1, by - 1);
+    return can_move_box_y(grid, rows, cols, c1, by + dir, dir);
 }
 
-void do_move_box_up2(char grid[][GRID_SIZE], int rows, int cols, int bx,
-                     int by) {
+void do_move_box_y2(char grid[][GRID_SIZE], int rows, int cols, int bx, int by,
+                    int dir) {
     int c1 = bx;
     int c2;
     if (grid[by][bx] == '[') {
@@ -172,124 +172,39 @@ void do_move_box_up2(char grid[][GRID_SIZE], int rows, int cols, int bx,
         c2 = bx - 1;
     }
 
-    if (grid[by - 1][c1] == '.' && grid[by - 1][c2] == '.') {
+    if (grid[by + dir][c1] == '.' && grid[by + dir][c2] == '.') {
         // do nothing
-    } else if (grid[by - 1][c1] == '.') {
+    } else if (grid[by + dir][c1] == '.') {
         // move c2
-        do_move_box_up2(grid, rows, cols, c2, by - 1);
-    } else if (grid[by - 1][c2] == '.') {
+        do_move_box_y2(grid, rows, cols, c2, by + dir, dir);
+    } else if (grid[by + dir][c2] == '.') {
         // move c1
-        do_move_box_up2(grid, rows, cols, c1, by - 1);
-    } else if (grid[by - 1][c2] == grid[by][c2]) {
+        do_move_box_y2(grid, rows, cols, c1, by + dir, dir);
+    } else if (grid[by + dir][c2] == grid[by][c2]) {
         // boxes aligned
-        do_move_box_up2(grid, rows, cols, c2, by - 1);
+        do_move_box_y2(grid, rows, cols, c2, by + dir, dir);
     } else {
         // move both boxes
-        do_move_box_up2(grid, rows, cols, c1, by - 1);
-        do_move_box_up2(grid, rows, cols, c2, by - 1);
+        do_move_box_y2(grid, rows, cols, c1, by + dir, dir);
+        do_move_box_y2(grid, rows, cols, c2, by + dir, dir);
     }
 
-    grid[by - 1][c1] = grid[by][c1];
-    grid[by - 1][c2] = grid[by][c2];
+    grid[by + dir][c1] = grid[by][c1];
+    grid[by + dir][c2] = grid[by][c2];
     grid[by][c1] = '.';
     grid[by][c2] = '.';
 }
 
-int move_box_up2(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
+int move_box_y2(char grid[][GRID_SIZE], int rows, int cols, int bx, int by,
+                int dir) {
     if (grid[by][bx] == '#') {
         return 0;
     }
 
     // push a box
 
-    if (can_move_box_up(grid, rows, cols, bx, by)) {
-        do_move_box_up2(grid, rows, cols, bx, by);
-        return 1;
-    }
-
-    return 0;
-}
-
-int can_move_box_down(char grid[][GRID_SIZE], int rows, int cols, int bx,
-                      int by) {
-    int c1 = bx;
-    int c2;
-    if (grid[by][bx] == '[') {
-        c2 = bx + 1;
-    } else {
-        c2 = bx - 1;
-    }
-
-    if (grid[by + 1][c1] == '#' || grid[by + 1][c2] == '#') {
-        return 0;
-    }
-
-    if (grid[by + 1][c1] == '.' && grid[by + 1][c2] == '.') {
-        return 1;
-    }
-
-    if (grid[by + 1][c1] != '.' && grid[by + 1][c2] != '.') {
-        // above both c1 and c2 are objects
-        if (grid[by + 1][c1] == grid[by][c1]) {
-            // objects are rightly alighned
-            return can_move_box_down(grid, rows, cols, c1, by + 1);
-        } else {
-            return can_move_box_down(grid, rows, cols, c1, by + 1) &&
-                   can_move_box_down(grid, rows, cols, c2, by + 1);
-        }
-    }
-
-    // one of them is . and other is an object
-    if (grid[by + 1][c1] == '.') {
-        // below c2 is an object
-        return can_move_box_down(grid, rows, cols, c2, by + 1);
-    }
-
-    // below c1 is an object
-    return can_move_box_down(grid, rows, cols, c1, by + 1);
-}
-
-void do_move_box_down2(char grid[][GRID_SIZE], int rows, int cols, int bx,
-                       int by) {
-    int c1 = bx;
-    int c2;
-    if (grid[by][bx] == '[') {
-        c2 = bx + 1;
-    } else {
-        c2 = bx - 1;
-    }
-
-    if (grid[by + 1][c1] == '.' && grid[by + 1][c2] == '.') {
-        // do nothing
-    } else if (grid[by + 1][c1] == '.') {
-        // move c2
-        do_move_box_down2(grid, rows, cols, c2, by + 1);
-    } else if (grid[by + 1][c2] == '.') {
-        // move c1
-        do_move_box_down2(grid, rows, cols, c1, by + 1);
-    } else if (grid[by + 1][c2] == grid[by][c2]) {
-        // boxes aligned
-        do_move_box_down2(grid, rows, cols, c2, by + 1);
-    } else {
-        // move both boxes
-        do_move_box_down2(grid, rows, cols, c1, by + 1);
-        do_move_box_down2(grid, rows, cols, c2, by + 1);
-    }
-
-    grid[by + 1][c1] = grid[by][c1];
-    grid[by + 1][c2] = grid[by][c2];
-    grid[by][c1] = '.';
-    grid[by][c2] = '.';
-}
-
-int move_box_down2(char grid[][GRID_SIZE], int rows, int cols, int bx, int by) {
-    if (grid[by][bx] == '#') {
-        return 0;
-    }
-
-    // push a box
-    if (can_move_box_down(grid, rows, cols, bx, by)) {
-        do_move_box_down2(grid, rows, cols, bx, by);
+    if (can_move_box_y(grid, rows, cols, bx, by, dir)) {
+        do_move_box_y2(grid, rows, cols, bx, by, dir);
         return 1;
     }
 
@@ -303,6 +218,8 @@ int move2(char grid[][GRID_SIZE], int rows, int cols, int *x, int *y,
     int ry = *y;
 
     int moved = 0;
+
+    int y_dir = 0;
 
     switch (sym) {
     case '>':
@@ -329,7 +246,7 @@ int move2(char grid[][GRID_SIZE], int rows, int cols, int *x, int *y,
     case 'v':
         // move down
         if (grid[ry + 1][rx] == '.' ||
-            move_box_down2(grid, rows, cols, rx, ry + 1)) {
+            move_box_y2(grid, rows, cols, rx, ry + 1, DOWN)) {
             grid[ry + 1][rx] = '@';
             grid[ry][rx] = '.';
             moved = 1;
@@ -340,7 +257,7 @@ int move2(char grid[][GRID_SIZE], int rows, int cols, int *x, int *y,
     case '^':
         // move up
         if (grid[ry - 1][rx] == '.' ||
-            move_box_up2(grid, rows, cols, rx, ry - 1)) {
+            move_box_y2(grid, rows, cols, rx, ry - 1, UP)) {
             grid[ry - 1][rx] = '@';
             grid[ry][rx] = '.';
             moved = 1;
