@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <asm-generic/errno.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
