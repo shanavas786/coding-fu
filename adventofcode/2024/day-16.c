@@ -11,19 +11,32 @@
 #define UNSET 0
 
 int ex, ey, sx, sy;
-int CACHE[140][140][4] = {0};
+int CACHE[140][140][5] = {0};
 
-int find_score(char **maze, int rows, int cols, int x, int y, int dir,
-               int iter) {
+int get_min_score() {
+    int score = 0;
+    for (int i = 0; i < 4; i++) {
+        if (score == 0) {
+            score = CACHE[ey][ex][i];
+            continue;
+        }
+
+        if (CACHE[ey][ex][i] != 0 && CACHE[ey][ex][i] < score) {
+            score = CACHE[ey][ex][i];
+        }
+    }
+
+    return score;
+}
+
+void find_score(char **maze, int rows, int cols, int x, int y, int dir,
+                int iter) {
     printf("x: %2d, y: %2d, dir: %2d, iter: %d\n", x, y, dir, iter);
-
-    /* if (CACHE[ey][ex][EAST] && CACHE[ey][ex][NORTH]) { */
-    /*     return 0; */
-    /* } */
 
     int score, cache;
     char sym;
     int dx, dy;
+    int min_score = get_min_score();
 
     // east
     if (dir % 2 == 0) {
@@ -41,7 +54,10 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[y][dx][dir] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d\n", dx, y,
                        dir, score);
-                find_score(maze, rows, cols, dx, y, dir, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, dx, y, dir, iter + 1);
+                }
             }
         }
 
@@ -60,7 +76,10 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[y - 1][x][NORTH] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d", x,
                        y - 1, NORTH, score);
-                find_score(maze, rows, cols, x, y - 1, NORTH, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, x, y - 1, NORTH, iter + 1);
+                }
             }
         }
 
@@ -79,7 +98,10 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[y + 1][x][SOUTH] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d\n", x,
                        y + 1, SOUTH, score);
-                find_score(maze, rows, cols, x, y + 1, SOUTH, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, x, y + 1, SOUTH, iter + 1);
+                }
             }
         }
     } else {
@@ -97,7 +119,10 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[dy][x][dir] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d\n", x, dy,
                        dir, score);
-                find_score(maze, rows, cols, x, dy, dir, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, x, dy, dir, iter + 1);
+                }
             }
         }
 
@@ -116,7 +141,10 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[y][x - 1][WEST] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d\n", x - 1,
                        y, WEST, score);
-                find_score(maze, rows, cols, x - 1, y, WEST, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, x - 1, y, WEST, iter + 1);
+                }
             }
         }
 
@@ -135,12 +163,13 @@ int find_score(char **maze, int rows, int cols, int x, int y, int dir,
                 CACHE[y][x + 1][EAST] = score;
                 printf("setting x: %2d, y: %2d, dir: %d to score: %4d\n", x + 1,
                        y, EAST, score);
-                find_score(maze, rows, cols, x + 1, y, EAST, iter + 1);
+                min_score = get_min_score();
+                if (min_score == 0 || score < min_score) {
+                    find_score(maze, rows, cols, x + 1, y, EAST, iter + 1);
+                }
             }
         }
     }
-
-    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -179,19 +208,17 @@ int main(int argc, char *argv[]) {
     printf("cache(ex, ey) west : %d\n", CACHE[ey][ex][WEST]);
     printf("cache(ex, ey) north : %d\n", CACHE[ey][ex][NORTH]);
 
-    int score = 0;
-    for (int i = 0; i < 4; i++) {
-        if (score == 0) {
-            score = CACHE[ey][ex][i];
-            continue;
+    printf("------------------\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("r: %2d, c:%2d, e: %5d, s: %5d, w:%5d, n: %5d\n", i, j,
+                   CACHE[i][j][EAST], CACHE[i][j][SOUTH], CACHE[i][j][WEST],
+                   CACHE[i][j][NORTH]);
         }
-
-        if (CACHE[ey][ex][i] != 0 && CACHE[ey][ex][i] < score) {
-            score = CACHE[ey][ex][i];
-        }
+        printf("----\n");
     }
-
-    printf("min score: %d\n", score - 1);
+    printf("------------------\n");
+    printf("min score: %d\n", get_min_score() - 1);
 
     for (int i = 0; i < rows; i++) {
         free(maze[i]);
