@@ -32,4 +32,6 @@ void stack_push(int val);
 
 int stack_size();
 
+long min(long arr[], int size);
+
 #endif // UTILS_H_

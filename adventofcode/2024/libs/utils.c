@@ -165,3 +165,16 @@ int num_digits(long long num) {
 
   return digits;
 }
+
+
+
+
+long min(long arr[], int size) {
+  long val = arr[0];
+  for (int i = 0; i < size; i++) {
+    if (arr[i] < val)
+      val = arr[i];
+  }
+
+  return val;
+}

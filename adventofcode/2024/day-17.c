@@ -23,7 +23,7 @@ int modulo(int a, int b) {
     return res;
 }
 
-int get_combo_op(int opr, int a, int b, int c) {
+int get_combo_op(int opr, long a, long b, long c) {
     int res = opr;
     switch (opr) {
     case 0:
@@ -49,6 +49,63 @@ int get_combo_op(int opr, int a, int b, int c) {
     return res;
 }
 
+int exec(int program[], int len_program, int *inp, long *a, long *b, long *c) {
+    int opcode;
+    long opr;
+    long num, denom;
+
+    while (*inp < len_program) {
+
+        opcode = program[(*inp)++];
+        opr = program[(*inp)++];
+
+        switch (opcode) {
+        case OP_ADV:
+            num = *a;
+            opr = get_combo_op(opr, *a, *b, *c);
+            denom = (long)pow(2, opr);
+            *a = (long)(num / denom);
+            break;
+        case OP_BXL:
+            *b = *b ^ opr;
+            break;
+        case OP_BST:
+            opr = get_combo_op(opr, *a, *b, *c);
+            *b = modulo(opr, 8);
+            break;
+        case OP_JNZ:
+            if (*a != 0) {
+                *inp = opr;
+            }
+            break;
+        case OP_BXC:
+            *b = *b ^ *c;
+            break;
+
+        case OP_OUT:
+            opr = get_combo_op(opr, *a, *b, *c);
+            return modulo(opr, 8);
+            break;
+
+        case OP_BDV:
+            num = *a;
+            opr = get_combo_op(opr, *a, *b, *c);
+            denom = (long)pow(2, opr);
+            *b = (long)(num / denom);
+            break;
+
+        case OP_CDV:
+            num = *a;
+            opr = get_combo_op(opr, *a, *b, *c);
+            denom = (long)pow(2, opr);
+            *c = (long)(num / denom);
+            break;
+        }
+    }
+
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 1) {
         exit(1);
@@ -62,18 +119,18 @@ int main(int argc, char *argv[]) {
     }
 
     char line[1024];
-    int a, b, c;
+    long a, b, c;
     int program[1024] = {0};
     int len_program = 0;
 
     fgets(line, sizeof(line), file);
-    sscanf(line, "Register A: %d", &a);
+    sscanf(line, "Register A: %ld", &a);
 
     fgets(line, sizeof(line), file);
-    sscanf(line, "Register B: %d", &b);
+    sscanf(line, "Register B: %ld", &b);
 
     fgets(line, sizeof(line), file);
-    sscanf(line, "Register C: %d", &c);
+    sscanf(line, "Register C: %ld", &c);
 
     fgets(line, sizeof(line), file); // empty line
 
@@ -87,8 +144,8 @@ int main(int argc, char *argv[]) {
 
     int inp = 0;
     int opcode;
-    int opr;
-    int num, denom;
+    long opr;
+    long num, denom;
 
     while (inp < len_program) {
         opcode = program[inp++];
@@ -98,8 +155,8 @@ int main(int argc, char *argv[]) {
         case OP_ADV:
             num = a;
             opr = get_combo_op(opr, a, b, c);
-            denom = (int)pow(2, opr);
-            a = (int)(num / denom);
+            denom = (long)pow(2, opr);
+            a = (long)(num / denom);
             break;
         case OP_BXL:
             b = b ^ opr;
@@ -107,9 +164,6 @@ int main(int argc, char *argv[]) {
         case OP_BST:
             opr = get_combo_op(opr, a, b, c);
             b = modulo(opr, 8);
-            if (b < 0) {
-                b = 8 - b;
-            }
             break;
         case OP_JNZ:
             if (a != 0) {
@@ -128,18 +182,57 @@ int main(int argc, char *argv[]) {
         case OP_BDV:
             num = a;
             opr = get_combo_op(opr, a, b, c);
-            denom = (int)pow(2, opr);
-            b = (int)(num / denom);
+            denom = (long)pow(2, opr);
+            b = (long)(num / denom);
             break;
 
         case OP_CDV:
             num = a;
             opr = get_combo_op(opr, a, b, c);
-            denom = (int)pow(2, opr);
-            c = (int)(num / denom);
+            denom = (long)pow(2, opr);
+            c = (long)(num / denom);
             break;
         }
     }
+
+    printf("\n");
+
+    long q1[1024] = {0};
+    long q2[1024] = {0};
+    int step = 0;
+    long *curr_q = q1;
+    long *next_q = q2;
+    int curr_q_size = 1;
+    int next_q_size = 0;
+
+    while (step < len_program) {
+        /* printf("step: %d\n", step); */
+        int candidate = program[len_program - step - 1];
+        for (int i = 0; i < curr_q_size; i++) {
+            long start = curr_q[i] * 8;
+            for (long val = start; val < start + 8; val++) {
+                a = val;
+                inp = 0;
+                int res = exec(program, len_program, &inp, &a, &b, &c);
+                if (res == candidate) {
+                    /* printf("found a: %ld\n", val); */
+                    next_q[next_q_size++] = val;
+                }
+            }
+        }
+
+        long *temp = curr_q;
+        int tmp = curr_q_size;
+
+        curr_q = next_q;
+        curr_q_size = next_q_size;
+        next_q = curr_q;
+        next_q_size = 0;
+        step++;
+    }
+
+    long min_a = min(curr_q, curr_q_size);
+    printf("min a: %ld\n", min_a);
 
     fclose(file);
     return 0;
